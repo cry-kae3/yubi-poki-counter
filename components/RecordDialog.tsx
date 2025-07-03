@@ -42,11 +42,11 @@ const RecordDialog: React.FC<RecordDialogProps> = ({
           </div>
 
           <div className="text-center mb-6">
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-2">
               <span className="font-semibold text-blue-600">{employeeName}</span>
               さんの指ポキを記録しますか？
             </p>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-gray-500">
               {new Date().toLocaleString('ja-JP')}
             </p>
           </div>
@@ -54,13 +54,13 @@ const RecordDialog: React.FC<RecordDialogProps> = ({
           <div className="flex space-x-3">
             <button
               onClick={onCancel}
-              className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors cursor-pointer"
+              className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
             >
               キャンセル
             </button>
             <button
               onClick={onConfirm}
-              className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors cursor-pointer"
+              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
               autoFocus
             >
               記録する

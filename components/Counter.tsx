@@ -6,6 +6,7 @@ import RecordDialog from './RecordDialog';
 import RecordsTable from './RecordsTable';
 import StatsChart from './StatsChart';
 import SearchFilter from './SearchFilter';
+import { TrendingUp, Calendar, BarChart3 } from 'lucide-react';
 
 const Counter: React.FC = () => {
   const [records, setRecords] = useState<PokyRecord[]>([]);
@@ -194,10 +195,10 @@ const Counter: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto"></div>
-          <p className="mt-2 text-gray-600">データを読み込んでいます...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">データを読み込んでいます...</p>
         </div>
       </div>
     );
@@ -205,17 +206,19 @@ const Counter: React.FC = () => {
 
   if (error) {
     return (
-      <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-        <div className="text-center py-8">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2">エラーが発生しました</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors cursor-pointer"
-          >
-            再試行
-          </button>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md mx-4">
+          <div className="text-center">
+            <div className="text-red-500 text-4xl mb-4">⚠️</div>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">エラーが発生しました</h2>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              再試行
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -223,128 +226,127 @@ const Counter: React.FC = () => {
 
   const recentRecords = filteredRecords.slice(0, 10);
 
+  const navigationItems = [
+    { id: 'dashboard', label: 'ダッシュボード', icon: TrendingUp },
+    { id: 'records', label: '記録一覧', icon: Calendar },
+    { id: 'chart', label: '統計グラフ', icon: BarChart3 },
+  ];
+
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* サイドバーメニュー */}
-      <div className="w-64 bg-white shadow-lg">
-        <div className="p-6">
-          <h1 className="text-xl font-bold text-gray-800 mb-8">
-            🐴 馬の指ポキカウンター
-          </h1>
-          
-          <nav className="space-y-2">
-            <button
-              onClick={() => setActiveTab('dashboard')}
-              className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-colors cursor-pointer ${
-                activeTab === 'dashboard'
-                  ? 'bg-blue-500 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              📊 ダッシュボード
-            </button>
-            <button
-              onClick={() => setActiveTab('records')}
-              className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-colors cursor-pointer ${
-                activeTab === 'records'
-                  ? 'bg-blue-500 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              📋 記録一覧・検索
-            </button>
-            <button
-              onClick={() => setActiveTab('chart')}
-              className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-colors cursor-pointer ${
-                activeTab === 'chart'
-                  ? 'bg-blue-500 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              📈 統計グラフ
-            </button>
-          </nav>
+    <div className="min-h-screen bg-gray-50">
+      {/* ヘッダー */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold text-gray-900">🐴 馬の指ポキカウンター</h1>
+            </div>
+            <nav className="flex space-x-8">
+              {navigationItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id as any)}
+                    className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      activeTab === item.id
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4 mr-2" />
+                    {item.label}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
         </div>
       </div>
 
       {/* メインコンテンツ */}
-      <div className="flex-1 p-6 overflow-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ダッシュボード */}
         {activeTab === 'dashboard' && (
-          <div className="max-w-4xl mx-auto space-y-8">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">ダッシュボード</h2>
-                <p className="text-gray-600">指ポキした時にボタンを押して記録しましょう</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                <div className="bg-blue-50 p-4 rounded-lg text-center">
-                  <h3 className="text-lg font-semibold text-blue-600">今日の回数</h3>
-                  <p className="text-3xl font-bold text-blue-800">{todayCount}</p>
-                </div>
-                <div className="bg-green-50 p-4 rounded-lg text-center">
-                  <h3 className="text-lg font-semibold text-green-600">総回数</h3>
-                  <p className="text-3xl font-bold text-green-800">{totalCount}</p>
-                </div>
-              </div>
-
-              <div className="text-center mb-8">
-                <button
-                  onClick={handleCountClick}
-                  className="bg-black hover:bg-gray-800 text-white font-bold py-4 px-8 rounded-lg text-xl shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
-                >
-                  👆 指ポキ記録
-                </button>
-              </div>
-
-              {recentRecords.length > 0 && (
-                <div className="mt-8">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-4">
-                    📋 最近の記録（最新10件）
-                  </h3>
-                  <div className="overflow-x-auto">
-                    <table className="w-full bg-gray-50 rounded-lg">
-                      <thead className="bg-gray-100">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">名前</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">時刻</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">アクション</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200">
-                        {recentRecords.map((record) => (
-                          <tr key={record.id} className="hover:bg-gray-100">
-                            <td className="px-4 py-3 text-sm text-gray-900">
-                              {record.employee}さん
-                            </td>
-                            <td className="px-4 py-3 text-sm text-gray-600">
-                              {new Date(record.timestamp).toLocaleString('ja-JP')}
-                            </td>
-                            <td className="px-4 py-3">
-                              <button
-                                onClick={() => handleDeleteRecord(record.id)}
-                                className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors cursor-pointer font-medium"
-                              >
-                                削除
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
+          <div className="space-y-8">
+            {/* ヘッダー */}
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">ダッシュボード</h2>
+              <p className="text-gray-600">指ポキした時にボタンを押して記録しましょう</p>
             </div>
+
+            {/* 統計カード */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              <div className="bg-white rounded-lg shadow p-6 text-center">
+                <h3 className="text-lg font-semibold text-gray-700 mb-2">今日の回数</h3>
+                <p className="text-4xl font-bold text-blue-600">{todayCount}</p>
+                <p className="text-gray-500 mt-1">回</p>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6 text-center">
+                <h3 className="text-lg font-semibold text-gray-700 mb-2">総回数</h3>
+                <p className="text-4xl font-bold text-green-600">{totalCount}</p>
+                <p className="text-gray-500 mt-1">回</p>
+              </div>
+            </div>
+
+            {/* 記録ボタン */}
+            <div className="text-center">
+              <button
+                onClick={handleCountClick}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg text-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+              >
+                👆 指ポキ記録
+              </button>
+            </div>
+
+            {/* 最近の記録 */}
+            {recentRecords.length > 0 && (
+              <div className="bg-white rounded-lg shadow">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-900">最近の記録（最新10件）</h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">名前</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">時刻</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {recentRecords.map((record) => (
+                        <tr key={record.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {record.employee}さん
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {new Date(record.timestamp).toLocaleString('ja-JP')}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <button
+                              onClick={() => handleDeleteRecord(record.id)}
+                              className="text-red-600 hover:text-red-900 text-sm font-medium"
+                            >
+                              削除
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
         {/* 記録一覧・検索 */}
         {activeTab === 'records' && (
-          <div className="max-w-6xl mx-auto space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">記録一覧・検索</h2>
+          <div className="space-y-6">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">記録一覧・検索</h2>
+              <p className="text-gray-600">過去の記録を検索・管理できます</p>
             </div>
             <SearchFilter
               onSearch={handleSearch}
@@ -360,10 +362,10 @@ const Counter: React.FC = () => {
 
         {/* 統計グラフ */}
         {activeTab === 'chart' && (
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">統計グラフ</h2>
-              <p className="text-gray-600">指ポキの統計をグラフで確認できます</p>
+          <div className="space-y-6">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">統計グラフ</h2>
+              <p className="text-gray-600">指ポキの傾向を視覚的に確認できます</p>
             </div>
             <StatsChart employeeName={employeeName} />
           </div>

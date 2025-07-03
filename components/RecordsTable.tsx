@@ -98,7 +98,7 @@ const RecordsTable: React.FC<RecordsTableProps> = ({ records, onDelete, isLoadin
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md">
+    <div className="bg-white rounded-lg shadow">
       <div className="p-6 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">📋 記録一覧</h3>
         
@@ -121,7 +121,7 @@ const RecordsTable: React.FC<RecordsTableProps> = ({ records, onDelete, isLoadin
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -185,7 +185,7 @@ const RecordsTable: React.FC<RecordsTableProps> = ({ records, onDelete, isLoadin
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
                       onClick={() => onDelete(record.id)}
-                      className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors cursor-pointer font-medium"
+                      className="text-red-600 hover:text-red-900"
                     >
                       削除
                     </button>
@@ -217,7 +217,7 @@ const RecordsTable: React.FC<RecordsTableProps> = ({ records, onDelete, isLoadin
                 key={index}
                 onClick={() => typeof page === 'number' && handlePageChange(page)}
                 disabled={page === '...'}
-                className={`px-3 py-1 text-sm border rounded cursor-pointer ${
+                className={`px-3 py-1 text-sm border rounded ${
                   page === currentPage
                     ? 'bg-blue-500 text-white border-blue-500'
                     : page === '...'

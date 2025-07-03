@@ -30,20 +30,26 @@ export async function GET(request: NextRequest) {
                 );
         }
 
-        const results = await prisma.$queryRaw<{ date: string; count: bigint }[]>`
-      SELECT 
-        TO_CHAR(${dateGroup}, ${dateFormat}) as date,
-        COUNT(*) as count
-      FROM poky_records 
-      WHERE employee = ${employee}
-      GROUP BY ${dateGroup}
-      ORDER BY ${dateGroup} ASC
-    `;
+        const results = await prisma.$queryRawUnsafe<{ date: string; count: bigint }[]>(`
+            SELECT 
+                TO_CHAR(${dateGroup}, '${dateFormat}') as date,
+                COUNT(*) as count
+            FROM poky_records 
+            WHERE employee = $1
+            GROUP BY ${dateGroup}
+            ORDER BY ${dateGroup} ASC
+        `, employee);
 
         const chartData = results.map(row => ({
             date: row.date,
             count: Number(row.count),
         }));
+
+        // 期間別にデータを補完
+        if (chartData.length > 0) {
+            const completeData = fillMissingDates(chartData, period);
+            return NextResponse.json({ success: true, data: completeData });
+        }
 
         return NextResponse.json({ success: true, data: chartData });
     } catch (error) {
@@ -53,4 +59,54 @@ export async function GET(request: NextRequest) {
             { status: 500 }
         );
     }
+}
+
+function fillMissingDates(data: { date: string; count: number }[], period: string) {
+    if (data.length === 0) return data;
+
+    const filledData: { date: string; count: number }[] = [];
+    const dataMap = new Map(data.map(item => [item.date, item.count]));
+
+    const startDate = new Date(data[0].date);
+    const endDate = new Date(data[data.length - 1].date);
+
+    let currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+        let dateKey: string;
+
+        switch (period) {
+            case 'daily':
+                dateKey = currentDate.toISOString().split('T')[0];
+                break;
+            case 'monthly':
+                dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+                break;
+            case 'yearly':
+                dateKey = String(currentDate.getFullYear());
+                break;
+            default:
+                dateKey = currentDate.toISOString().split('T')[0];
+        }
+
+        filledData.push({
+            date: dateKey,
+            count: dataMap.get(dateKey) || 0
+        });
+
+        // 次の期間に進む
+        switch (period) {
+            case 'daily':
+                currentDate.setDate(currentDate.getDate() + 1);
+                break;
+            case 'monthly':
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                break;
+            case 'yearly':
+                currentDate.setFullYear(currentDate.getFullYear() + 1);
+                break;
+        }
+    }
+
+    return filledData;
 }

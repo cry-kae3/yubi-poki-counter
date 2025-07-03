@@ -95,7 +95,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch, onReset }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-lg shadow p-6">
       <h3 className="text-lg font-semibold text-gray-700 mb-4">🔍 検索・フィルター</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -105,7 +105,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch, onReset }) => {
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         <div>
@@ -114,7 +114,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch, onReset }) => {
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
       </div>
@@ -124,37 +124,37 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch, onReset }) => {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={handleToday}
-            className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm cursor-pointer"
+            className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors text-sm"
           >
             今日
           </button>
           <button
             onClick={handleYesterday}
-            className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm cursor-pointer"
+            className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors text-sm"
           >
             昨日
           </button>
           <button
             onClick={handleThisWeek}
-            className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors text-sm cursor-pointer"
+            className="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors text-sm"
           >
             今週
           </button>
           <button
             onClick={handleLastWeek}
-            className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors text-sm cursor-pointer"
+            className="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors text-sm"
           >
             先週
           </button>
           <button
             onClick={handleThisMonth}
-            className="px-3 py-1 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors text-sm cursor-pointer"
+            className="px-3 py-1 bg-purple-100 text-purple-700 rounded-md hover:bg-purple-200 transition-colors text-sm"
           >
             今月
           </button>
           <button
             onClick={handleLastMonth}
-            className="px-3 py-1 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors text-sm cursor-pointer"
+            className="px-3 py-1 bg-purple-100 text-purple-700 rounded-md hover:bg-purple-200 transition-colors text-sm"
           >
             先月
           </button>
@@ -164,13 +164,13 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch, onReset }) => {
       <div className="flex gap-3">
         <button
           onClick={handleSearch}
-          className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors font-medium cursor-pointer"
+          className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors font-medium"
         >
           🔍 検索
         </button>
         <button
           onClick={handleReset}
-          className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors cursor-pointer"
+          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
         >
           リセット
         </button>

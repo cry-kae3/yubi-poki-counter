@@ -93,18 +93,9 @@ const StatsChart: React.FC<StatsChartProps> = ({ employeeName }) => {
     }
   };
 
-  const getChartTypeLabel = () => {
-    switch (chartType) {
-      case 'line': return '📈 線グラフ';
-      case 'bar': return '📊 棒グラフ';
-      case 'pie': return '🥧 円グラフ';
-      default: return '';
-    }
-  };
-
   if (isLoading) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white p-6 rounded-lg shadow">
         <div className="animate-pulse">
           <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
           <div className="h-64 bg-gray-200 rounded"></div>
@@ -114,107 +105,114 @@ const StatsChart: React.FC<StatsChartProps> = ({ employeeName }) => {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 space-y-4 lg:space-y-0">
-        <h3 className="text-lg font-semibold text-gray-700">
-          📊 {employeeName}さんの{getPeriodLabel()}統計グラフ
-        </h3>
-        
-        <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
-          <div className="flex gap-1">
-            {(['daily', 'monthly', 'yearly'] as const).map((periodOption) => (
-              <button
-                key={periodOption}
-                onClick={() => setPeriod(periodOption)}
-                className={`px-3 py-2 rounded text-sm transition-colors cursor-pointer font-medium ${
-                  period === periodOption
-                    ? 'bg-blue-500 text-white shadow-md'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                {periodOption === 'daily' && '📅 日別'}
-                {periodOption === 'monthly' && '📊 月別'}
-                {periodOption === 'yearly' && '📆 年別'}
-              </button>
-            ))}
-          </div>
+    <div className="space-y-6">
+      {/* コントロールパネル */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 space-y-4 lg:space-y-0">
+          <h3 className="text-lg font-semibold text-gray-700">
+            📊 {employeeName}さんの{getPeriodLabel()}統計グラフ
+          </h3>
+          
+          <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
+            <div className="flex gap-1">
+              {(['daily', 'monthly', 'yearly'] as const).map((periodOption) => (
+                <button
+                  key={periodOption}
+                  onClick={() => setPeriod(periodOption)}
+                  className={`px-3 py-2 rounded text-sm transition-colors font-medium ${
+                    period === periodOption
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {periodOption === 'daily' && '📅 日別'}
+                  {periodOption === 'monthly' && '📊 月別'}
+                  {periodOption === 'yearly' && '📆 年別'}
+                </button>
+              ))}
+            </div>
 
-          <div className="flex gap-1">
-            {(['line', 'bar', 'pie'] as const).map((type) => (
-              <button
-                key={type}
-                onClick={() => setChartType(type)}
-                className={`px-3 py-2 rounded text-sm transition-colors cursor-pointer font-medium ${
-                  chartType === type
-                    ? 'bg-green-500 text-white shadow-md'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                {type === 'line' && '📈'}
-                {type === 'bar' && '📊'}
-                {type === 'pie' && '🥧'}
-              </button>
-            ))}
+            <div className="flex gap-1">
+              {(['line', 'bar', 'pie'] as const).map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setChartType(type)}
+                  className={`px-3 py-2 rounded text-sm transition-colors font-medium ${
+                    chartType === type
+                      ? 'bg-green-500 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {type === 'line' && '📈'}
+                  {type === 'bar' && '📊'}
+                  {type === 'pie' && '🥧'}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {period === 'daily' && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600 mb-2">表示期間</label>
-          <div className="flex gap-2 flex-wrap">
-            {[7, 14, 30, 60, 90].map((days) => (
+        {period === 'daily' && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-600 mb-2">表示期間</label>
+            <div className="flex gap-2 flex-wrap">
+              {[7, 14, 30, 60, 90].map((days) => (
+                <button
+                  key={days}
+                  onClick={() => setDateRange(days)}
+                  className={`px-3 py-1 rounded text-sm transition-colors ${
+                    dateRange === days
+                      ? 'bg-purple-500 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {days}日間
+                </button>
+              ))}
               <button
-                key={days}
-                onClick={() => setDateRange(days)}
-                className={`px-3 py-1 rounded text-sm transition-colors cursor-pointer ${
-                  dateRange === days
+                onClick={() => setDateRange(0)}
+                className={`px-3 py-1 rounded text-sm transition-colors ${
+                  dateRange === 0
                     ? 'bg-purple-500 text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                {days}日間
+                全期間
               </button>
-            ))}
-            <button
-              onClick={() => setDateRange(0)}
-              className={`px-3 py-1 rounded text-sm transition-colors cursor-pointer ${
-                dateRange === 0
-                  ? 'bg-purple-500 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              全期間
-            </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 統計カード */}
+      {chartData.length > 0 && (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="text-center p-4 bg-blue-50 rounded-lg">
+            <p className="text-sm text-blue-600 font-medium">総回数</p>
+            <p className="text-2xl font-bold text-blue-800">{totalCount}</p>
+          </div>
+          <div className="text-center p-4 bg-green-50 rounded-lg">
+            <p className="text-sm text-green-600 font-medium">平均</p>
+            <p className="text-2xl font-bold text-green-800">{averageCount}</p>
+          </div>
+          <div className="text-center p-4 bg-purple-50 rounded-lg">
+            <p className="text-sm text-purple-600 font-medium">最大</p>
+            <p className="text-2xl font-bold text-purple-800">{maxCount}</p>
+          </div>
+          <div className="text-center p-4 bg-orange-50 rounded-lg">
+            <p className="text-sm text-orange-600 font-medium">最小</p>
+            <p className="text-2xl font-bold text-orange-800">{minCount}</p>
           </div>
         </div>
       )}
 
-      {chartData.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
-          <p>表示するデータがありません</p>
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="text-center p-3 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-600 font-medium">総回数</p>
-              <p className="text-2xl font-bold text-blue-800">{totalCount}</p>
-            </div>
-            <div className="text-center p-3 bg-green-50 rounded-lg">
-              <p className="text-sm text-green-600 font-medium">平均</p>
-              <p className="text-2xl font-bold text-green-800">{averageCount}</p>
-            </div>
-            <div className="text-center p-3 bg-purple-50 rounded-lg">
-              <p className="text-sm text-purple-600 font-medium">最大</p>
-              <p className="text-2xl font-bold text-purple-800">{maxCount}</p>
-            </div>
-            <div className="text-center p-3 bg-orange-50 rounded-lg">
-              <p className="text-sm text-orange-600 font-medium">最小</p>
-              <p className="text-2xl font-bold text-orange-800">{minCount}</p>
-            </div>
+      {/* グラフ */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        {chartData.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <p>表示するデータがありません</p>
           </div>
-
+        ) : (
           <div className="h-96">
             <ResponsiveContainer width="100%" height="100%">
               {chartType === 'line' ? (
@@ -279,20 +277,20 @@ const StatsChart: React.FC<StatsChartProps> = ({ employeeName }) => {
               )}
             </ResponsiveContainer>
           </div>
+        )}
 
-          {chartData.length > 0 && (
-            <div className="mt-4 text-sm text-gray-500 text-center">
-              <p>
-                データ期間: {chartData[0].date} 〜 {chartData[chartData.length - 1].date}
-                （{chartData.length}件のデータ）
-              </p>
-              {chartType === 'pie' && chartData.length > 8 && (
-                <p className="mt-1">※ 円グラフは上位8件のみ表示しています</p>
-              )}
-            </div>
-          )}
-        </>
-      )}
+        {chartData.length > 0 && (
+          <div className="mt-4 text-sm text-gray-500 text-center">
+            <p>
+              データ期間: {chartData[0].date} 〜 {chartData[chartData.length - 1].date}
+              （{chartData.length}件のデータ）
+            </p>
+            {chartType === 'pie' && chartData.length > 8 && (
+              <p className="mt-1">※ 円グラフは上位8件のみ表示しています</p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
